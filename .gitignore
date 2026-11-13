@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+
+# Next.js build outputs
+.next/
+out/
+next-env.d.ts
+*.tsbuildinfo
+
+# Local environment secrets
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Local runtime SQLite database
+data/*.db
+data/*.db-wal
+data/*.db-shm
+
+# Logs, cache and OS files
+__pycache__/
+*.pyc
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db

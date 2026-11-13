@@ -1,0 +1,100 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-cream: #FFF8F3;
+  --brand-pink: #F47FA5;
+  --brand-cta: #DF5C88;
+  --brand-cta-hover: #C84572;
+  --brand-light-pink: #FFE4EC;
+  --brand-yellow: #F7EFE2;
+  --brand-lavender: #F7EFF4;
+  --ink-primary: #261B20;
+  --ink-secondary: #6E5E65;
+}
+
+body {
+  background-color: #FFF8F3;
+  color: #261B20;
+  font-feature-settings: "kern" 1;
+}
+
+@keyframes floatSlow {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes mascotAlive {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg) scale(1);
+  }
+  25% {
+    transform: translateY(-2px) rotate(-0.9deg) scale(1.01, 0.992);
+  }
+  50% {
+    transform: translateY(-3.5px) rotate(0.6deg) scale(0.996, 1.012);
+  }
+  75% {
+    transform: translateY(-1.5px) rotate(1deg) scale(1.006, 0.996);
+  }
+}
+
+.animate-mascot-alive {
+  transform-origin: center bottom;
+  animation: mascotAlive 4.6s ease-in-out infinite;
+}
+
+.animate-float-slow {
+  transform-origin: center bottom;
+  animation: mascotAlive 3.6s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(90deg, #F1EFF0 25%, #F8F7F6 50%, #F1EFF0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-float-slow,
+  .animate-mascot-alive,
+  .skeleton-shimmer {
+    animation: none !important;
+  }
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Minimal scrollbar */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+::-webkit-scrollbar-track {
+  background: #F8F7F6;
+}
+::-webkit-scrollbar-thumb {
+  background: #D9D2D5;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #B8AEB2;
+}
