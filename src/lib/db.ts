@@ -12,7 +12,13 @@ import {
   inferDietaryCategory,
 } from "./types";
 
-const DEFAULT_DB_DIR = path.join(process.cwd(), "data");
+const IS_SERVERLESS_RO = Boolean(
+  process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME || process.env.NOW_REGION
+);
+const SERVERLESS_TMP_DIR = process.env.TMPDIR || "/tmp";
+const DEFAULT_DB_DIR = IS_SERVERLESS_RO
+  ? SERVERLESS_TMP_DIR
+  : path.join(process.cwd(), "data");
 const DB_PATH = process.env.CHUAN_DI_DB_PATH
   ? path.resolve(process.env.CHUAN_DI_DB_PATH)
   : path.join(DEFAULT_DB_DIR, "chuan-di.db");
@@ -1082,12 +1088,25 @@ function runSelfProfileAndLinksMigration(db: DatabaseSync) {
 
 export function getDb(): DatabaseSync {
   if (!global.__chuanDiDb) {
-    if (!fs.existsSync(DB_DIR)) {
-      fs.mkdirSync(DB_DIR, { recursive: true });
+    let targetPath = DB_PATH;
+    try {
+      if (!fs.existsSync(DB_DIR)) {
+        fs.mkdirSync(DB_DIR, { recursive: true });
+      }
+      const db = new DatabaseSync(targetPath);
+      initSchema(db);
+      global.__chuanDiDb = db;
+    } catch (err) {
+      const code = (err as NodeJS.ErrnoException)?.code;
+      if (code === "EROFS" || code === "EACCES" || code === "EPERM") {
+        targetPath = path.join(SERVERLESS_TMP_DIR, "chuan-di.db");
+        const db = new DatabaseSync(targetPath);
+        initSchema(db);
+        global.__chuanDiDb = db;
+      } else {
+        throw err;
+      }
     }
-    const db = new DatabaseSync(DB_PATH);
-    initSchema(db);
-    global.__chuanDiDb = db;
   }
 
   if (!global.__chuanDiSeeded) {
